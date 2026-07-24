@@ -1,0 +1,35 @@
+function I = quadrature(dx, N, kappa, eta, ttm, sigma, x)
+% This function computes the Fourier Transform using the quadrature method.
+%% Inputs:
+% dx:       stepsize of log-moneyness grid
+% N :       number of steps
+% kappa:    curtosis
+% eta:      skewness
+% ttm:      time to maturity
+% sigma:    volatility
+% x:        Vector of target log-moneyness values to interpolate
+
+%% Output:
+% I:        value of the Fourier Transform using quadrature method
+
+% Valori che poi devi verificare che siano corretti (magari con un plot)
+z_up_limit = 100; % To handle it in order to obtain the best result possible
+N_z = 10000;
+
+z = linspace(0, z_up_limit, N_z);
+
+% Calculate the integrand function in this points:
+f_z = integrand(z, kappa, eta, ttm, sigma);
+
+% x is a row in the main, so we transpose in order to obtain a matrix 
+% doing x'*z.
+% We take only the real part because the Lewis integral is on the real axis
+total_integranda = real(exp((-1).*(1i).* (x'*z)).* f_z);
+
+% We use trapz in order to not use a for cycle to compute the integrand for
+% each value that we need
+I = trapz(z, total_integranda, 1);
+
+% Final thin
+I = (1/pi) .* exp(-x./2) .* I; 
+

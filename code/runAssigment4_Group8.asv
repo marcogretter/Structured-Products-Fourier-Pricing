@@ -1,0 +1,50 @@
+% Assignment 4
+% Group 8, AY2025-2026
+% 
+clear all;
+close all;
+clc;
+
+load("eurostoxx_Poli.mat");
+
+%% For Mac user:
+[datesSet, ratesSet] = readExcelData('MktData_CurveBootstrap.xlsx');
+%% For Windows user:
+%[datesSet, ratesSet] = readExcelDataWindows('MktData_CurveBootstrap.xlsx', formatData)
+[dates, discounts, zeroRates] = bootstrap(datesSet, ratesSet);
+%% 1. Certificate pricing
+settlement = datesSet.settlement;
+maturityDate = datenum(2013,2,19);
+T = yearfrac(settlement, maturityDate, 2);
+
+
+%% 2. Digital Option pricing
+%% 3. Pricing with characteristic function
+%% 4. Pricing:
+
+% Parameters:
+alpha = 1/2;
+sigma = 0.2;
+k = 1; % asymmetry
+eta = 3; % volatility of the volatility
+% moneyness x between -25% and 25% in a grid with 1% steps
+dx= 0.01; % 1% steps
+x = -0.25 : dx : 0.25;
+ttm = 1;
+F0 = cSelect.reference;
+
+% a) FFT:
+M = 15; % it was said verbally by the professor at the lecture 
+N = 2^M;
+I_fft = FFT(dx, N, k, eta, ttm, sigma, x);
+
+% b) Quadrature
+I = quadrature(kappa, eta, ttm, sigma, x)
+
+
+
+
+
+
+%% 5. Volatility surface calibration
+
